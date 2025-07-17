@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claim Hadiah</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #2c3e50, #34495e);
+      color: #ecf0f1;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 2.5em;
+      font-weight: bold;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+
+    #claimButton {
+      margin-top: 30px;
+      padding: 12px 24px;
+      background-color: #2980b9;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #claimButton:hover {
+      background-color: #3498db;
+    }
+
+    #hadiahSection {
+      display: none; /* awalnya disembunyikan */
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .hadiah-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 200px;
+      padding: 15px;
+      background-color: #34495e;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      transition: 0.3s ease;
+      border: 2px solid #2980b9;
+    }
+
+    .hadiah-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .hadiah-item button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .hadiah-item button:hover {
+      background-color: #3498db;
+    }
+
+    .hadiah-item.selected {
+      border: 3px solid #ff66b2;
+      box-shadow: 0 0 15px rgba(255, 102, 178, 0.6);
+      transform: scale(1.05);
+    }
+
+    #popup {
+      display: none;
+      position: fixed;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #ecf0f1;
+      color: #2c3e50;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    #popup button {
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #popup button:hover {
+      background-color: #3498db;
+    }
+
+    .confetti {
+      position: fixed;
+      top: 0;
+      animation: fall linear;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Selamat Ulang Tahun, Juliandri Sarira Tanduk! 🥳</h1>
+  <p>Selamat Memasuki Usia Jompo... Welcome to The Club Big 30 💖</p>
+
+  <audio id="bgMusic" loop>
+    <source src="Good_Morning_to_All(chosic.com).mp3" type="audio/mpeg">
+  </audio>
+
+  <button id="claimButton" onclick="mulaiClaim()">🎁 Claim Hadiah</button>
+
+  <div id="hadiahSection">
+    <div class="hadiah-item">
+      <img src="https://dynamic.zacdn.com/dPrmqw66FRnGGzjFe2dOi74ylvo=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/hush-puppies-5741-9251854-1.jpg" alt="Topi" />
+      <button class="hadiah-btn" onclick="tampilkanPopup('Topi')">🧢 Topi 🧢</button>
+    </div>
+    <div class="hadiah-item">
+      <img src="https://dynamic.zacdn.com/zpOGeeatnvIfUplfLYusindzfTI=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/hush-puppies-5556-1930494-1.jpg" alt="Kaos" />
+      <button class="hadiah-btn" onclick="tampilkanPopup('Kaos')">🧬 Kaos 🧬</button>
+    </div>
+    <div class="hadiah-item">
+      <img src="https://dynamic.zacdn.com/pRUX9eslfGMMBKHVDfHbkK8U3Qc=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/eiger-9151-0754804-2.jpg" alt="Backpack" />
+      <button class="hadiah-btn" onclick="tampilkanPopup('Backpack')">🎒 Backpack 🎒</button>
+    </div>
+  </div>
+
+  <div id="popup" class="popup">
+    <p id="popupText"></p>
+    <button onclick="kirimWhatsapp()">Mau yang ini ❤️</button>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const audio = document.getElementById("bgMusic");
+      document.body.addEventListener("click", function () {
+        if (audio.paused) {
+          audio.play().catch((err) => {
+            console.log("Audio tidak bisa diputar:", err.message);
+          });
+        }
+      }, { once: true });
+    });
+
+    let pilihanHadiah = "";
+
+    function tampilkanPopup(hadiah) {
+      pilihanHadiah = hadiah;
+      document.getElementById("popupText").innerText = `Kamu pilih: ${hadiah}`;
+      document.getElementById("popup").style.display = "block";
+    }
+
+    function kirimWhatsapp() {
+      const nomorWA = "6288740097336";
+      const pesan = encodeURIComponent(`Hai sayang! Aku pilih ini: ${pilihanHadiah}`);
+      const link = `https://wa.me/${nomorWA}?text=${pesan}`;
+      window.open(link, "_blank");
+    }
+
+    function mulaiClaim() {
+      tampilkanHadiah();
+      buatKonfeti();
+    }
+
+    function tampilkanHadiah() {
+      document.getElementById("hadiahSection").style.display = "flex";
+    }
+
+    function buatKonfeti() {
+      const emoji = ["🎉", "💖", "✨", "🎂", "🥳"];
+      for (let i = 0; i < 30; i++) {
+        const span = document.createElement("span");
+        span.className = "confetti";
+        span.innerText = emoji[Math.floor(Math.random() * emoji.length)];
+        span.style.left = Math.random() * window.innerWidth + "px";
+        span.style.animationDuration = (Math.random() * 2 + 3) + "s";
+        span.style.fontSize = (Math.random() * 10 + 20) + "px";
+        document.body.appendChild(span);
+        setTimeout(() => span.remove(), 4000);
+      }
+    }
+  </script>
+</body>
+</html>
